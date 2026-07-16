@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Copy, Check, RotateCw, Shield, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
 
 export default function PasswordGenerator() {
   const [password, setPassword] = useState("");
@@ -92,9 +93,11 @@ export default function PasswordGenerator() {
     try {
       await navigator.clipboard.writeText(password);
       setCopied(true);
+      toast.success("Password copied to clipboard!", { icon: "🔑" });
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
       console.error(e);
+      toast.error("Failed to copy password");
     }
   };
 

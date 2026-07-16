@@ -4,3 +4,90 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
+
+/* Custom visual system tokens */
+@layer utilities {
+  .bg-grid-pattern {
+    background-image: 
+      radial-gradient(circle at 1px 1px, var(--color-zinc-200) 1px, transparent 0),
+      radial-gradient(circle at 1px 1px, var(--color-zinc-200) 1px, transparent 0);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+  }
+  .dark .bg-grid-pattern {
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0),
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(228, 228, 231, 0.6);
+  }
+  .dark .glass-card {
+    background: rgba(9, 9, 11, 0.4);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(39, 39, 42, 0.5);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.15);
+  }
+  .dark .glow-blue {
+    box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.3);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 40px -10px rgba(168, 85, 247, 0.15);
+  }
+  .dark .glow-purple {
+    box-shadow: 0 0 40px -10px rgba(168, 85, 247, 0.3);
+  }
+
+  .text-gradient-primary {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--color-indigo-650), var(--color-purple-600), var(--color-pink-600));
+  }
+  .dark .text-gradient-primary {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--color-indigo-400), var(--color-purple-400), var(--color-pink-400));
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-zinc-300);
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-zinc-800);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-indigo-500);
+}

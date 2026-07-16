@@ -1,4 +1,5 @@
 import React from "react";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 transition-colors duration-300">
         {children}
+        <Toaster position="bottom-right" richColors theme="system" />
       </body>
     </html>
   );
