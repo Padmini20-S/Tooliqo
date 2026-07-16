@@ -35,6 +35,27 @@ export default function ContactPage() {
           </p>
         </div>
 
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="sm:w-1/3 flex flex-col space-y-6">
+            <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/20 shadow-sm space-y-3">
+              <span className="inline-flex p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">
+                <Mail className="w-5 h-5" />
+              </span>
+              <h3 className="text-base font-semibold">Direct Email</h3>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Contact the founder directly for support, feedback, or business inquiries.
+              </p>
+              <div className="pt-2">
+                <p className="text-sm font-bold">Padmini Singh</p>
+                <a href="mailto:singh12019@gmail.com" className="text-indigo-600 dark:text-indigo-400 text-sm hover:underline">
+                  singh12019@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="sm:w-2/3">
+
         {submitted ? (
           <div className="p-6 rounded-2xl border border-green-200 dark:border-green-900/35 bg-green-50 dark:bg-green-950/20 text-center space-y-4">
             <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto" />
@@ -122,6 +143,8 @@ export default function ContactPage() {
             </button>
           </form>
         )}
+          </div>
+        </div>
       </main>
 
       <Footer />

@@ -51,9 +51,14 @@ export default function AboutPage() {
             As software developers, we frequently found ourselves searching for utilities to format raw JSON payloads, generate quick passwords, test regular expressions, and convert case values. However, most available tool sites were cluttered with intrusive pop-up advertisements, slow load times, and suspicious data sharing practices.
           </p>
           <p>
-            We created <strong>Tooliqo</strong> to solve this. Tooliqo delivers a clean, beautiful, fast, and secure suite of tools without cookie tracking or back-end storage.
+            I created <strong>Tooliqo</strong> to solve this. Tooliqo delivers a clean, beautiful, fast, and secure suite of tools without cookie tracking or back-end storage.
           </p>
-          <p className="flex items-center gap-1">
+          <div className="pt-4 pb-2">
+            <h4 className="font-bold text-zinc-900 dark:text-white">Founder</h4>
+            <p className="font-medium">Padmini Singh</p>
+            <a href="mailto:singh12019@gmail.com" className="text-indigo-600 dark:text-indigo-400 hover:underline">singh12019@gmail.com</a>
+          </div>
+          <p className="flex items-center gap-1 pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50">
             Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by developers, for developers.
           </p>
         </div>
