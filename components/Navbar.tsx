@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sun, Moon, Menu, X, Search, Wrench, FileText, Code, Palette, Terminal } from "lucide-react";
+import { Menu, X, Search, Wrench, FileText, Code, Palette, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { categories } from "@/lib/tools";
 
@@ -14,31 +14,6 @@ interface NavbarProps {
 export default function Navbar({ onSearchOpen }: NavbarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    // Check local storage or system preference
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    } else if (systemPrefersDark) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-    } else {
-      setTheme("light");
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-  };
 
   const getCategoryIcon = (iconName: string) => {
     switch (iconName) {
@@ -98,19 +73,6 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
                 ⌘K
               </kbd>
             </button>
-
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer border border-zinc-200 dark:border-zinc-800 transition-all duration-200"
-              aria-label="Toggle Theme"
-            >
-              {theme === "light" ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5 text-amber-400" />
-              )}
-            </button>
           </div>
 
           {/* Mobile menu and search buttons */}
@@ -121,18 +83,6 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
               aria-label="Search"
             >
               <Search className="w-5 h-5" />
-            </button>
-
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
-              aria-label="Toggle Theme"
-            >
-              {theme === "light" ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5 text-amber-400" />
-              )}
             </button>
 
             <button
