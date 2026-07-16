@@ -1,0 +1,6 @@
+{
+  "name": "Tooliqo",
+  "description": "500+ Powerful Online Tools All in One Place",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
