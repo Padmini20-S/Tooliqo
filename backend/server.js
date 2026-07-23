@@ -149,5 +149,48 @@ app.get("/api/auth/me", async (req, res) => {
   }
 });
 
+app.post("/api/auth/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "No account found with that email" });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp;
+    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    await resend.emails.send({
+      from: "Tooliqo <support@tooliqo.in>",
+      to: [email],
+      subject: "Password Reset OTP • Tooliqo",
+      html: getVerificationEmailHtml(user.name, otp)
+    });
+
+    res.status(200).json({ message: "Password reset OTP sent to email" });
+  } catch (error) {
+    res.status(500).json({ message: "Network Error" });
+  }
+});
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "Account not found" });
+    if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
+    if (!user.otpExpiry || user.otpExpiry < new Date()) return res.status(400).json({ message: "OTP Expired" });
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully. You can now login." });
+  } catch (error) {
+    res.status(500).json({ message: "Network Error" });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
