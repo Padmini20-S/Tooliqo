@@ -83,7 +83,7 @@ export default function InternetSpeedTest() {
           </defs>
 
           {/* Needle */}
-          <g style={{ transform: \`rotate(\${rotation}deg)\`, transformOrigin: '100px 90px', transition: 'transform 0.1s ease-out' }}>
+          <g style={{ transform: `rotate(${rotation}deg)`, transformOrigin: '100px 90px', transition: 'transform 0.1s ease-out' }}>
             <polygon points="95,90 105,90 100,20" fill="#0f172a" />
             <circle cx="100" cy="90" r="8" fill="#0f172a" />
             <circle cx="100" cy="90" r="3" fill="#ffffff" />
