@@ -2,6 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
+import PremiumFileUploader from "./PremiumFileUploader";
 
 const JsonFormatter = dynamic(() => import("@/components/tools/JsonFormatter"), {
   loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JSON Formatter...</div>,
@@ -83,6 +84,6 @@ export default function ToolWrapper({ slug }: ToolWrapperProps) {
     case "regex-tester":
       return <RegexTester />;
     default:
-      return <div className="p-4 text-center text-red-500">Tool component not found.</div>;
+      return <PremiumFileUploader toolName={slug} />;
   }
 }
