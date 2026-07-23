@@ -18,7 +18,18 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://tooliqo.onrender.com";
+    fetch(`${API_URL}/api/auth/me`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
       .then(res => {
         if (!res.ok) throw new Error("Not logged in");
         return res.json();
@@ -32,18 +43,15 @@ export default function ProfilePage() {
         setIsLoading(false);
       })
       .catch(() => {
+        localStorage.removeItem("auth_token");
         router.push("/login");
       });
   }, [router]);
 
   const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-      toast.success("👋 Logged out successfully");
-      router.push("/login");
-    } catch (e) {
-      toast.error("Error logging out");
-    }
+    localStorage.removeItem("auth_token");
+    toast.success("👋 Logged out successfully");
+    router.push("/login");
   };
 
   if (isLoading || !user) {

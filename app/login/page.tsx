@@ -28,7 +28,8 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://tooliqo.onrender.com";
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -38,6 +39,7 @@ export default function LoginPage() {
       if (!res.ok) {
         toast.error(data.message || "Incorrect Password");
       } else {
+        localStorage.setItem("auth_token", data.token); // Store token
         toast.success(`✅ Logged in successfully. Welcome back, ${data.user?.name} 👋`);
         router.push("/profile");
       }

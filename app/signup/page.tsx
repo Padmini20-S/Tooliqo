@@ -86,7 +86,8 @@ export default function SignupPage() {
 
     setIsLoading(true);
     try {
-      const res = await fetch("/api/auth/signup", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://tooliqo.onrender.com";
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password }),
@@ -113,7 +114,8 @@ export default function SignupPage() {
     
     setIsLoading(true);
     try {
-      const res = await fetch("/api/auth/verify", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://tooliqo.onrender.com";
+      const res = await fetch(`${API_URL}/api/auth/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email, otp: formData.otp }),
@@ -122,6 +124,7 @@ export default function SignupPage() {
       if (!res.ok) {
         toast.error(data.message || "Invalid OTP");
       } else {
+        localStorage.setItem("auth_token", data.token); // Store token
         toast.success("🎉 Account created successfully. Your email has been verified. Welcome to Tooliqo.");
         router.push("/profile");
       }
