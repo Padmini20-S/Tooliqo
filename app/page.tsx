@@ -3,387 +3,280 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
-  Search, Sparkles, Terminal, Flame, Info, Star, ShieldCheck, 
-  HelpCircle, ChevronDown, Compass, Zap, Lock, RefreshCw, AppWindow 
+  Search, ArrowRight, Zap, Shield, Heart, HelpCircle, ChevronDown, CheckCircle, 
+  Image as ImageIcon, FileText, Video, Music, Bot, Code, Calculator, ArrowLeftRight, QrCode, Palette, SearchCheck, Type 
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ToolCard from "@/components/ToolCard";
 import SearchBar from "@/components/SearchBar";
-import { tools, categories, Tool } from "@/lib/tools";
+import ToolCard from "@/components/ToolCard";
+import { tools, Tool } from "@/lib/tools";
 import { motion } from "framer-motion";
 
-export default function Page() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [filteredTools, setFilteredTools] = useState<Tool[]>(tools);
-  const [favoriteSlugs, setFavoriteSlugs] = useState<string[]>([]);
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-
-  // Load favorites from local storage on mount
-  useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem("tooliqo_favorites") || "[]");
-    setFavoriteSlugs(favorites);
-  }, []);
-
-  // Filter tools based on category and favorites trigger
-  useEffect(() => {
-    let result = tools;
-    if (selectedCategory !== "all") {
-      result = result.filter((t) => t.category === selectedCategory);
-    }
-    if (showFavoritesOnly) {
-      const favorites = JSON.parse(localStorage.getItem("tooliqo_favorites") || "[]");
-      setFavoriteSlugs(favorites);
-      result = result.filter((t) => favorites.includes(t.slug));
-    }
-    setFilteredTools(result);
-  }, [selectedCategory, showFavoritesOnly]);
-
-  // Listen for CMD+K / CTRL+K
+  
+  // Setup keyboard shortcut for search
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setSearchOpen((prev) => !prev);
+        setSearchOpen(true);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const categories = [
+    { id: "image", name: "Image", icon: ImageIcon, color: "text-blue-500", bg: "bg-blue-50" },
+    { id: "pdf", name: "PDF", icon: FileText, color: "text-red-500", bg: "bg-red-50" },
+    { id: "video", name: "Video", icon: Video, color: "text-purple-500", bg: "bg-purple-50" },
+    { id: "audio", name: "Audio", icon: Music, color: "text-orange-500", bg: "bg-orange-50" },
+    { id: "ai", name: "AI", icon: Bot, color: "text-emerald-500", bg: "bg-emerald-50" },
+    { id: "document", name: "Document", icon: FileText, color: "text-sky-500", bg: "bg-sky-50" },
+    { id: "developer", name: "Developer", icon: Code, color: "text-indigo-500", bg: "bg-indigo-50" },
+    { id: "calculator", name: "Calculator", icon: Calculator, color: "text-teal-500", bg: "bg-teal-50" },
+    { id: "converter", name: "Converter", icon: ArrowLeftRight, color: "text-amber-500", bg: "bg-amber-50" },
+    { id: "qr", name: "QR", icon: QrCode, color: "text-zinc-600", bg: "bg-zinc-100" },
+    { id: "color", name: "Color", icon: Palette, color: "text-pink-500", bg: "bg-pink-50" },
+    { id: "seo", name: "SEO", icon: SearchCheck, color: "text-cyan-500", bg: "bg-cyan-50" },
+    { id: "text", name: "Text", icon: Type, color: "text-violet-500", bg: "bg-violet-50" },
+  ];
+
   const faqs = [
     {
-      q: "Is Tooliqo really 100% client-side?",
-      a: "Yes. All data processing—whether formatting JSON, generating passwords, compiling markdown, or hashing text—runs locally inside your browser via standard client JavaScript. No inputs or files are sent to any remote server.",
+      q: "Is Tooliqo completely free?",
+      a: "Yes, Tooliqo will always remain 100% FREE. We don't have any premium plans or paid subscriptions. Our platform is supported entirely by non-intrusive advertisements.",
     },
     {
-      q: "Can I use Tooliqo offline?",
-      a: "Absolutely. Once the page is loaded, all tool features run completely locally without requiring active network requests, making it fast and secure even with intermittent internet connections.",
+      q: "Do I need to create an account to use the tools?",
+      a: "No, every single tool on our platform is accessible without a login. Creating an account is completely optional, but gives you access to history, favorites, and preference syncing.",
     },
     {
-      q: "Is there any cost or limit on file size?",
-      a: "No. Tooliqo is completely free to use without constraints, logins, or hidden premium paywalls. Files uploaded are parsed client-side, restricted only by your local browser's memory allocation.",
+      q: "Are my files secure?",
+      a: "Absolutely. Many of our tools process files directly in your browser. For tools that require server processing, we delete all files immediately after processing. We never store, share, or sell your data.",
     },
     {
-      q: "How does the password generator secure my data?",
-      a: "It utilizes standard Web Cryptography APIs (`window.crypto.getRandomValues`) to generate random, high-entropy password strings. Because it runs locally, the generated password is never transmitted across the network, eliminating interception risks.",
+      q: "Can I use Tooliqo on my phone?",
+      a: "Yes! Tooliqo is built with a mobile-first approach. The interface is completely responsive and works perfectly on smartphones, tablets, and desktops.",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 flex flex-col transition-colors duration-300 bg-grid-pattern">
-      <Navbar onSearchOpen={() => setSearchOpen(true)} />
-
+    <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-32 px-4 overflow-hidden border-b border-zinc-200/60 dark:border-zinc-900/60 bg-gradient-to-b from-white via-zinc-50/50 to-transparent dark:from-zinc-950 dark:via-zinc-950/40">
-        {/* Glow Effects */}
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/10 dark:bg-blue-500/5 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/5 blur-3xl rounded-full pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+      <section className="pt-20 pb-16 md:pt-32 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto space-y-8"
+        >
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-blue-50 text-blue-600 font-medium text-sm mb-4 border-soft">
+            <SparklesIcon className="w-4 h-4" />
+            <span>100% Free Forever. No Login Required.</span>
+          </div>
           
-          {/* Hero details */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, staggerChildren: 0.1 }}
-            className="lg:col-span-7 space-y-6 text-left"
-          >
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-indigo-200/50 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-950/30 text-indigo-650 dark:text-indigo-400 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-              <span>Futuristic Web Toolbox</span>
-            </motion.div>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1]">
+            All The Tools You Need <br className="hidden sm:block" />
+            <span className="text-blue-600">In One Place</span>
+          </h1>
+          
+          <p className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
+            100+ Free Online Tools for Images, PDF, AI, Video, Audio, Text and more. Enhance your productivity with a premium, lightning-fast platform.
+          </p>
 
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] font-sans">
-              Powerful Tools.<br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-                One Smart Platform.
-              </span>
-            </motion.h1>
+          {/* Large Hero Search Bar */}
+          <div className="max-w-2xl mx-auto mt-10 relative">
+            <button 
+              onClick={() => setSearchOpen(true)}
+              className="w-full flex items-center gap-4 bg-white border-2 border-slate-200 hover:border-blue-400 rounded-2xl px-6 py-5 shadow-sm transition-all text-left group"
+            >
+              <Search className="w-6 h-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
+              <span className="flex-1 text-lg text-slate-400 font-medium">Search for any tool...</span>
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-lg text-sm font-semibold text-slate-500 border border-slate-200">
+                <span>⌘</span><span>K</span>
+              </kbd>
+            </button>
+          </div>
+        </motion.div>
+      </section>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="max-w-xl text-base sm:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              Access the next-generation suite of formatting, cryptography, utility generators, and visual CSS design tools. 100% local execution, zero trackers, and ultra-fast speed.
-            </motion.p>
+      {/* Ad Placeholder (Hero) */}
+      <div className="max-w-5xl mx-auto w-full px-4 mb-16">
+        <div className="w-full h-[90px] md:h-[120px] bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-sm">
+          Advertisement
+        </div>
+      </div>
 
-            {/* CTAs */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap gap-4 pt-2">
-              <a
-                href="#toolbox"
-                className="py-3 px-6 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-655 to-indigo-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-200 hover:-translate-y-0.5 flex items-center space-x-2 cursor-pointer"
-              >
-                <Compass className="w-4 h-4" />
-                <span>Explore Toolbox</span>
-              </a>
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="py-3 px-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 font-semibold text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all flex items-center space-x-2 cursor-pointer"
-              >
-                <Search className="w-4 h-4 text-zinc-400" />
-                <span>Find a Tool</span>
-                <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono border rounded bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 ml-2">
-                  ⌘K
-                </kbd>
-              </button>
-            </motion.div>
-
-            {/* Trust highlights */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="grid grid-cols-3 gap-6 pt-6 border-t border-zinc-200/50 dark:border-zinc-800/50 max-w-md">
-              <div className="space-y-1">
-                <span className="block text-xl font-bold text-zinc-900 dark:text-white">12+</span>
-                <span className="block text-xs text-zinc-450 dark:text-zinc-500 font-medium">Active Utilities</span>
-              </div>
-              <div className="space-y-1">
-                <span className="block text-xl font-bold text-zinc-900 dark:text-white">100%</span>
-                <span className="block text-xs text-zinc-450 dark:text-zinc-500 font-medium">Local Privacy</span>
-              </div>
-              <div className="space-y-1">
-                <span className="block text-xl font-bold text-zinc-900 dark:text-white">&lt; 15ms</span>
-                <span className="block text-xs text-zinc-450 dark:text-zinc-500 font-medium">Latency Response</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Interactive Hero Illustration Mockup */}
-          <div className="lg:col-span-5 relative hidden lg:block">
-            <div className="relative w-full h-[400px] rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-md p-6 shadow-2xl overflow-hidden glow-blue animate-float">
-              {/* Top mockup header */}
-              <div className="flex items-center justify-between pb-4 border-b border-zinc-150 dark:border-zinc-800/50">
-                <div className="flex space-x-1.5">
-                  <span className="w-3 h-3 rounded-full bg-red-400/80" />
-                  <span className="w-3 h-3 rounded-full bg-amber-400/80" />
-                  <span className="w-3 h-3 rounded-full bg-green-400/80" />
-                </div>
-                <div className="px-3 py-1 rounded bg-zinc-100 dark:bg-zinc-850 text-[10px] font-mono text-zinc-500">tooliqo_dashboard.cfg</div>
-              </div>
-
-              {/* Mock items inside code illustration */}
-              <div className="space-y-4 pt-6 font-mono text-xs text-zinc-400">
-                <div className="space-y-1">
-                  <span className="text-indigo-650 dark:text-indigo-400 font-semibold">// Running Web Crypto Hash</span>
-                  <p className="bg-zinc-50 dark:bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-150 dark:border-zinc-850 break-all text-[11px] text-zinc-700 dark:text-zinc-300">
-                    crypto.subtle.digest(&quot;SHA-256&quot;, buffer) &rarr; &quot;2cf24dba5fb0a30e26e83b2...&quot;
-                  </p>
-                </div>
-                
-                <div className="space-y-1">
-                  <span className="text-rose-500 font-semibold">// Dynamic Indentation Spacing</span>
-                  <div className="bg-zinc-50 dark:bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-150 dark:border-zinc-850 text-[11px] text-zinc-650 dark:text-zinc-300 space-y-0.5">
-                    <p className="text-blue-500">{`{`}</p>
-                    <p className="pl-4"><span className="text-amber-500">&quot;tooliqo&quot;</span>: <span className="text-green-500">&quot;SaaS Platform&quot;</span>,</p>
-                    <p className="pl-4"><span className="text-amber-500">&quot;performance&quot;</span>: <span className="text-green-500">&quot;99/100&quot;</span></p>
-                    <p className="text-blue-500">{`}`}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2 pt-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-[10px] text-zinc-500">Live Client Compiler Ready</span>
-                </div>
-              </div>
+      {/* Popular Categories */}
+      <section className="py-16 bg-white border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Popular Categories</h2>
+              <p className="text-slate-500">Find exactly what you need quickly.</p>
             </div>
           </div>
-
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {categories.slice(0, 12).map((category, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                key={category.id}
+              >
+                <Link 
+                  href={`/categories/${category.id}`}
+                  className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl hover:border-blue-200 hover:shadow-soft transition-all group cursor-pointer h-full"
+                >
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${category.bg} group-hover:scale-110 transition-transform duration-300`}>
+                    <category.icon className={`w-6 h-6 ${category.color}`} />
+                  </div>
+                  <span className="font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">{category.name}</span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Showcase Grid Section */}
-      <section id="toolbox" className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-10 scroll-mt-16">
-        
-        {/* AdSense Top Ad Slot Placement */}
-        <div className="border-2 border-dashed border-zinc-250 dark:border-zinc-800 rounded-2xl p-4 text-center bg-zinc-100/50 dark:bg-zinc-900/40 min-h-[90px] flex items-center justify-center">
-          <div className="space-y-1">
-            <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block">Advertisement</span>
-            <span className="text-xs text-zinc-450 dark:text-zinc-400 italic">Ad Slot Placement (Ideal for AdSense Page-Level Ads)</span>
+      {/* Trending / Popular Tools */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <h2 className="text-3xl font-bold text-slate-900 mb-2">Trending Tools</h2>
+              <p className="text-slate-500">Most used tools by our community today.</p>
+            </div>
+            <Link href="/tools" className="hidden sm:flex items-center text-blue-600 font-medium hover:text-blue-700">
+              View all <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
           </div>
-        </div>
-
-        {/* Section Header */}
-        <div className="text-center space-y-3">
-          <h2 className="text-3xl font-extrabold tracking-tight">Our Smart Toolbox</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
-            Choose from a wide variety of utilities. Filter by categories or view your favorites for quick daily access.
-          </p>
-        </div>
-
-        {/* Categories Tab navigation & Favorites Switch */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-4">
-          <div className="flex items-center flex-wrap gap-2">
-            <button
-              onClick={() => {
-                setSelectedCategory("all");
-                setShowFavoritesOnly(false);
-              }}
-              className={`px-4.5 py-2 text-xs font-bold rounded-full transition-all duration-200 border cursor-pointer ${
-                selectedCategory === "all" && !showFavoritesOnly
-                  ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 border-zinc-900 dark:border-white shadow-sm"
-                  : "bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border-zinc-200/60 dark:border-zinc-800/60 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-              }`}
-            >
-              All Utilities
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => {
-                  setSelectedCategory(cat.id);
-                  setShowFavoritesOnly(false);
-                }}
-                className={`px-4.5 py-2 text-xs font-bold rounded-full transition-all duration-200 border cursor-pointer ${
-                  selectedCategory === cat.id && !showFavoritesOnly
-                    ? "bg-indigo-600 dark:bg-indigo-550 text-white border-indigo-600 dark:border-indigo-550 shadow-sm"
-                    : "bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border-zinc-200/60 dark:border-zinc-800/60 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Favorites switch */}
-          <button
-            onClick={() => {
-              setShowFavoritesOnly(!showFavoritesOnly);
-              setSelectedCategory("all");
-            }}
-            className={`flex items-center space-x-1.5 px-4.5 py-2 text-xs font-bold rounded-full border transition-all cursor-pointer ${
-              showFavoritesOnly
-                ? "bg-amber-500 border-amber-500 text-white shadow-md"
-                : "bg-white dark:bg-zinc-900 text-zinc-550 dark:text-zinc-400 border-zinc-200/60 dark:border-zinc-800/60 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-            }`}
-          >
-            <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? "fill-white" : ""}`} />
-            <span>Starred Tools</span>
-          </button>
-        </div>
-
-        {/* Display Grid */}
-        {filteredTools.length > 0 ? (
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.map((tool, index) => (
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tools.slice(0, 6).map((tool, index) => (
               <ToolCard key={tool.slug} tool={tool} index={index} />
             ))}
-          </section>
-        ) : (
-          <div className="text-center py-16 p-6 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/30">
-            <Star className="w-12 h-12 text-zinc-350 dark:text-zinc-600 mx-auto" />
-            <h3 className="text-base font-bold text-zinc-700 dark:text-zinc-300 mt-4">No tools starred yet</h3>
-            <p className="text-xs text-zinc-450 dark:text-zinc-500 mt-2 max-w-xs mx-auto">
-              Add tools to your stars by clicking the star icon on any tool card for immediate dashboard retrieval.
-            </p>
           </div>
-        )}
-      </section>
-
-      {/* How it Works Section */}
-      <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-zinc-200/50 dark:border-zinc-800/50 space-y-12">
-        <div className="text-center space-y-3">
-          <h2 className="text-2xl font-extrabold tracking-tight">How it Works</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
-            Tooliqo streamlines your developer workflow in 3 simple steps.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="p-6 rounded-2xl glass-card space-y-4">
-            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold text-sm">
-              01
-            </span>
-            <h3 className="text-base font-bold text-zinc-800 dark:text-white">Choose Your Utility</h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              Explore our dashboard categories or trigger search palette using <kbd className="px-1 py-0.5 border rounded bg-zinc-50 dark:bg-zinc-850">⌘K</kbd> to launch your preferred tool.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl glass-card space-y-4">
-            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-650 dark:text-purple-400 font-bold text-sm">
-              02
-            </span>
-            <h3 className="text-base font-bold text-zinc-800 dark:text-white">Process Data Locally</h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              Enter your payloads, settings, or values. Conversions are calculated client-side in microseconds via standard browser Javascript.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl glass-card space-y-4">
-            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 font-bold text-sm">
-              03
-            </span>
-            <h3 className="text-base font-bold text-zinc-800 dark:text-white">Copy or Export Output</h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              Copy results instantly to your clipboard or download files (e.g. formatted JSON configurations or QR code SVGs) directly.
-            </p>
+          
+          <div className="mt-8 text-center sm:hidden">
+            <Link href="/tools" className="inline-flex items-center justify-center w-full px-6 py-3 bg-white border border-slate-200 rounded-xl font-medium text-slate-700">
+              View all tools
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Security & Data Privacy Spotlight */}
-      <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/10 backdrop-blur-md flex flex-col lg:flex-row items-center justify-between gap-8 shadow-sm">
-          <div className="space-y-3">
-            <div className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-650 dark:text-emerald-400 text-[10px] font-bold border border-emerald-250/20">
-              <ShieldCheck className="w-3.5 h-3.5 mr-1" />
-              <span>SOC2 Compliant Architecture Model</span>
-            </div>
-            <h3 className="text-xl font-bold">100% Encrypted & Local Code Sandboxes</h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-3xl">
-              Unlike online developer utilities that track payloads or write database logs, Tooliqo runs entirely in the context of your browser tab. We utilize native HTML5 Web Cryptography modules and ES6 compilers to execute operations locally. None of your data interacts with our hosting servers, ensuring total compliance for proprietary company configurations and user keys.
+      {/* Ad Placeholder (Middle) */}
+      <div className="max-w-7xl mx-auto w-full px-4 py-8">
+        <div className="w-full h-[90px] bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-sm">
+          Advertisement
+        </div>
+      </div>
+
+      {/* Why Choose Us */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Why Choose Tooliqo?</h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              We built this platform to be the only toolkit you'll ever need. Fast, beautiful, and always free.
             </p>
           </div>
-          <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-650 dark:text-indigo-400 border border-indigo-200/50">
-            <Lock className="w-6 h-6" />
-          </div>
-        </div>
-      </section>
 
-      {/* FAQ Accordion Section */}
-      <section className="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-extrabold tracking-tight flex items-center justify-center gap-2">
-            <HelpCircle className="w-6 h-6 text-indigo-500" />
-            <span>Frequently Asked Questions</span>
-          </h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Everything you need to know about Tooliqo platform structure.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          {faqs.map((faq, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/20 overflow-hidden"
-            >
-              <button
-                onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                className="w-full flex items-center justify-between p-5 text-left font-bold text-sm text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors cursor-pointer"
-              >
-                <span>{faq.q}</span>
-                <ChevronDown
-                  className={`w-4 h-4 text-zinc-450 dark:text-zinc-550 transition-transform duration-300 ${
-                    activeFaq === idx ? "transform rotate-180" : ""
-                  }`}
-                />
-              </button>
-              <div
-                className={`transition-all duration-300 ease-in-out ${
-                  activeFaq === idx ? "max-h-40 border-t border-zinc-150 dark:border-zinc-800/50" : "max-h-0"
-                } overflow-hidden`}
-              >
-                <p className="p-5 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  {faq.a}
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 bg-slate-50 rounded-[24px] border border-slate-100">
+              <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                <Zap className="w-7 h-7" />
               </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Lightning Fast</h3>
+              <p className="text-slate-500 leading-relaxed">
+                Built on next-generation architecture. Tools load instantly and process data without frustrating delays or waiting screens.
+              </p>
             </div>
-          ))}
+            <div className="p-8 bg-slate-50 rounded-[24px] border border-slate-100">
+              <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Secure & Private</h3>
+              <p className="text-slate-500 leading-relaxed">
+                Your data is yours. Many tools process locally in your browser. Server processed files are instantly wiped, guaranteeing privacy.
+              </p>
+            </div>
+            <div className="p-8 bg-slate-50 rounded-[24px] border border-slate-100">
+              <div className="w-14 h-14 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center mb-6">
+                <Heart className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">100% Free Forever</h3>
+              <p className="text-slate-500 leading-relaxed">
+                No hidden paywalls. No premium features. Everything is completely free and accessible without even creating an account.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Global Command Search Palette */}
-      <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      {/* FAQ */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+            <p className="text-slate-500">Everything you need to know about the platform.</p>
+          </div>
 
-      <Footer />
+          <div className="space-y-4">
+            {faqs.map((faq, idx) => (
+              <div key={idx} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition-all">
+                <button
+                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
+                  className="w-full flex items-center justify-between p-6 text-left"
+                >
+                  <span className="font-semibold text-slate-900">{faq.q}</span>
+                  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${activeFaq === idx ? "rotate-180" : ""}`} />
+                </button>
+                <div className={`overflow-hidden transition-all duration-300 ${activeFaq === idx ? "max-h-96" : "max-h-0"}`}>
+                  <p className="px-6 pb-6 text-slate-500 leading-relaxed border-t border-slate-100 pt-4">
+                    {faq.a}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Ready to boost your productivity?</h2>
+          <p className="text-xl text-slate-500 mb-10">Start using our premium tools for absolutely free right now.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/tools" className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors shadow-soft w-full sm:w-auto">
+              Explore All Tools
+            </Link>
+            <Link href="/login" className="px-8 py-4 bg-white text-slate-700 font-semibold rounded-full border border-slate-200 hover:bg-slate-50 transition-colors w-full sm:w-auto">
+              Create Free Account
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
+}
+
+function SparklesIcon(props: any) {
+  return (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+      <path d="M5 3v4"/>
+      <path d="M19 17v4"/>
+      <path d="M3 5h4"/>
+      <path d="M17 19h4"/>
+    </svg>
+  )
 }

@@ -1,17 +1,20 @@
 import React from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import MobileNav from "@/components/MobileNav";
+import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Tooliqo - 500+ Powerful Online Tools All in One Place",
-  description: "Boost your productivity with Tooliqo. Access formatting, generators, cryptographic hash tools, and design helper engines directly in your browser.",
+  title: "Tooliqo - All The Tools You Need In One Place",
+  description: "100+ Free Online Tools for Images, PDF, AI, Video, Audio, Text and more. Always free, no login required.",
   metadataBase: new URL("https://tooliqo.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Tooliqo - Online Developer Toolbox",
-    description: "Access free online formatting, validation, cryptographic hashes, and visual CSS design utilities securely in your browser.",
+    title: "Tooliqo - All The Tools You Need In One Place",
+    description: "100+ Free Online Tools for Images, PDF, AI, Video, Audio, Text and more. Always free, no login required.",
     url: "https://tooliqo.com",
     siteName: "Tooliqo",
     locale: "en_US",
@@ -25,20 +28,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth dark">
+    <html lang="en" className="scroll-smooth">
       <head>
-        {/* Load Inter font from CDN dynamically on the client browser */}
+        {/* Load Inter font */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;855;900&display=swap" rel="stylesheet" />
-        
-        {/* AdSense Publisher Code Placement Holder */}
-        {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> */}
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 transition-colors duration-300">
-        {children}
-        <Toaster position="bottom-right" richColors theme="dark" />
+      <body className="antialiased min-h-screen flex flex-col pb-16 md:pb-0">
+        <Navbar />
+        <main className="flex-1 flex flex-col">
+          {children}
+        </main>
+        <Footer />
+        <MobileNav />
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );
 }
+

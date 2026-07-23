@@ -18,6 +18,7 @@
     "framer-motion": "^12.42.2",
     "lucide-react": "^0.553.0",
     "marked": "^13.0.3",
+    "mongoose": "^9.8.0",
     "motion": "^12.23.24",
     "next": "^16.2.10",
     "postcss": "^8.5.6",

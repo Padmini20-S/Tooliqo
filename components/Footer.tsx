@@ -1,129 +1,57 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
-import { Wrench, Github, Twitter, Mail } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo and Info */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white">
-                <Wrench className="w-4 h-4 text-white" />
-              </span>
-              <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-600 dark:from-indigo-400 dark:to-pink-400">
-                Tooliqo
-              </span>
+    <footer className="bg-white border-t border-gray-200 mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+          <div className="col-span-2 lg:col-span-2">
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                T
+              </div>
+              <span className="font-bold text-xl tracking-tight text-slate-900">Tooliqo</span>
             </Link>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              Your ultimate collection of developer utilities, text converters, design generators, and calculators. All tools are 100% free, fast, and secure.
+            <p className="text-slate-500 text-sm mb-6 max-w-sm leading-relaxed">
+              100+ Free Online Tools for Images, PDF, AI, Video, Audio, Text and more. Always 100% free, no premium plans, no login required.
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="mailto:support@tooliqo.com"
-                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-                aria-label="Email"
-              >
-                <Mail className="w-5 h-5" />
-              </a>
-            </div>
           </div>
-
-          {/* Legal / AdSense Essentials */}
+          
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 tracking-wider uppercase mb-4">
-              Legal
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/privacy-policy"
-                  className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms-conditions"
-                  className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-                >
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/disclaimer"
-                  className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-                >
-                  Disclaimer
-                </Link>
-              </li>
+            <h3 className="font-semibold text-slate-900 mb-4">Tools</h3>
+            <ul className="space-y-3">
+              <li><Link href="/category/image" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Image Tools</Link></li>
+              <li><Link href="/category/pdf" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">PDF Tools</Link></li>
+              <li><Link href="/category/ai" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">AI Tools</Link></li>
+              <li><Link href="/category/video" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Video Tools</Link></li>
             </ul>
           </div>
-
-          {/* Company */}
+          
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 tracking-wider uppercase mb-4">
-              Company
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-                >
-                  Contact Us
-                </Link>
-              </li>
+            <h3 className="font-semibold text-slate-900 mb-4">Platform</h3>
+            <ul className="space-y-3">
+              <li><Link href="/about" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">About Us</Link></li>
+              <li><Link href="/blog" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Blog</Link></li>
+              <li><Link href="/contact" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Contact</Link></li>
+              <li><Link href="/faq" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">FAQ</Link></li>
             </ul>
           </div>
-
-          {/* Disclaimer / Data Security */}
+          
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 tracking-wider uppercase mb-4">
-              Security & Privacy
-            </h3>
-            <p className="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">
-              No data processed on Tooliqo is sent to any server. All processing runs locally inside your browser, ensuring your files and keys remain private and protected.
-            </p>
+            <h3 className="font-semibold text-slate-900 mb-4">Legal</h3>
+            <ul className="space-y-3">
+              <li><Link href="/privacy" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Terms of Service</Link></li>
+            </ul>
           </div>
         </div>
-
-        <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">
+        
+        <div className="border-t border-gray-100 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-500 text-sm">
             &copy; {currentYear} Tooliqo. All rights reserved.
-          </p>
-          <p className="text-[10px] text-zinc-400 dark:text-zinc-600">
-            Designed for high performance & Google AdSense optimization.
           </p>
         </div>
       </div>
