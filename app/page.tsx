@@ -65,36 +65,48 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="pt-20 pb-16 md:pt-32 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center">
+      <section className="relative pt-24 pb-20 md:pt-40 md:pb-32 px-4 sm:px-6 lg:px-8 w-full text-center overflow-hidden">
+        {/* Premium Background Glow Effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] sm:w-[1000px] sm:h-[500px] opacity-[0.15] pointer-events-none z-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 blur-[120px] rounded-full"></div>
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto space-y-8"
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 max-w-5xl mx-auto space-y-10"
         >
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-blue-50 text-blue-600 font-medium text-sm mb-4 border-soft">
-            <SparklesIcon className="w-4 h-4" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/80 backdrop-blur-md text-slate-700 font-semibold text-sm mb-4 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow cursor-default"
+          >
+            <SparklesIcon className="w-4 h-4 text-blue-500" />
             <span>100% Free Forever. No Login Required.</span>
-          </div>
+          </motion.div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1]">
+          <h1 className="text-5xl sm:text-7xl md:text-[5.5rem] font-extrabold tracking-tighter text-slate-900 leading-[1.05]">
             All The Tools You Need <br className="hidden sm:block" />
-            <span className="text-blue-600">In One Place</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 pb-2">
+              In One Place.
+            </span>
           </h1>
           
-          <p className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed font-medium">
             100+ Free Online Tools for Images, PDF, AI, Video, Audio, Text and more. Enhance your productivity with a premium, lightning-fast platform.
           </p>
 
           {/* Large Hero Search Bar */}
-          <div className="max-w-2xl mx-auto mt-10 relative">
+          <div className="max-w-3xl mx-auto mt-12 relative">
             <button 
               onClick={() => setSearchOpen(true)}
-              className="w-full flex items-center gap-4 bg-white border-2 border-slate-200 hover:border-blue-400 rounded-2xl px-6 py-5 shadow-sm transition-all text-left group"
+              className="w-full flex items-center gap-4 bg-white/90 backdrop-blur-md border-2 border-slate-200/80 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 rounded-2xl px-6 py-5 sm:px-8 sm:py-6 shadow-sm transition-all duration-300 text-left group"
             >
-              <Search className="w-6 h-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
-              <span className="flex-1 text-lg text-slate-400 font-medium">Search for any tool...</span>
-              <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-lg text-sm font-semibold text-slate-500 border border-slate-200">
+              <Search className="w-7 h-7 text-slate-400 group-hover:text-blue-500 transition-colors" />
+              <span className="flex-1 text-xl text-slate-400 font-medium">What do you want to do today?</span>
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-4 py-2 bg-slate-100 rounded-xl text-sm font-bold text-slate-500 border border-slate-200 shadow-sm">
                 <span>⌘</span><span>K</span>
               </kbd>
             </button>
