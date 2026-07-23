@@ -26,6 +26,15 @@ const nextConfig = {
     }
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        // Proxy all API requests to the Render backend
+        destination: 'https://tooliqo.onrender.com/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
