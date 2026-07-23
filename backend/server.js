@@ -193,6 +193,69 @@ app.post("/api/auth/reset-password", async (req, res) => {
   }
 });
 
+app.post("/api/auth/admin/send-otp", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const allowedAdmins = ["singh13019@gmail.com", "diplomawithbtech@gmail.com"];
+    
+    if (!allowedAdmins.includes(email)) {
+      return res.status(403).json({ message: "User not allowed" });
+    }
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        name: "Admin",
+        email,
+        password: await bcrypt.hash(Math.random().toString(), 10),
+        isVerified: true
+      });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp;
+    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    await resend.emails.send({
+      from: "Tooliqo <support@tooliqo.in>",
+      to: [email],
+      subject: "Admin Access OTP • Tooliqo",
+      html: getVerificationEmailHtml(user.name, otp)
+    });
+
+    res.status(200).json({ message: "OTP sent to admin email" });
+  } catch (error) {
+    res.status(500).json({ message: "Network Error" });
+  }
+});
+
+app.post("/api/auth/admin/verify-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const allowedAdmins = ["singh13019@gmail.com", "diplomawithbtech@gmail.com"];
+    
+    if (!allowedAdmins.includes(email)) {
+      return res.status(403).json({ message: "User not allowed" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "Admin account not found" });
+
+    if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
+    if (!user.otpExpiry || user.otpExpiry < new Date()) return res.status(400).json({ message: "OTP Expired" });
+
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    const token = jwt.sign({ userId: user._id, email: user.email, name: user.name }, process.env.JWT_SECRET || "fallback", { expiresIn: "7d" });
+    res.status(200).json({ message: "Admin authenticated", token });
+  } catch (error) {
+    res.status(500).json({ message: "Network Error" });
+  }
+});
+
 app.get("/api/admin/users", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;

@@ -1,144 +1,90 @@
 "use client";
 
 import React, { useState } from "react";
-import { Copy, Trash2, Download, Check, AlertCircle, FileText, Sparkles } from "lucide-react";
+import { Copy, Trash2, Download, Check, AlertCircle, Code, Sparkles } from "lucide-react";
 
-export default function YamlToJson() {
-  const [yamlInput, setYamlInput] = useState("");
+export default function XmlToJson() {
+  const [xmlInput, setXmlInput] = useState("");
   const [jsonOutput, setJsonOutput] = useState("");
   const [indent, setIndent] = useState(2);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const sampleYaml = `# App configuration
-name: Tooliqo Suite
-version: 2.5.0
-environment: production
-features:
-  - analytics
-  - developer-tools
-  - offline-mode
-database:
-  host: localhost
-  port: 5432
-  ssl: true
-  maxConnections: 50
-meta:
-  author: Tooliqo Team
-  license: MIT`;
+  const sampleXml = `<?xml version="1.0" encoding="UTF-8"?>
+<bookstore>
+  <book category="COOKING">
+    <title lang="en">Everyday Italian</title>
+    <author>Giada De Laurentiis</author>
+    <year>2005</year>
+    <price>30.00</price>
+  </book>
+  <book category="CHILDREN">
+    <title lang="en">Harry Potter</title>
+    <author>J K. Rowling</author>
+    <year>2005</year>
+    <price>29.99</price>
+  </book>
+</bookstore>`;
 
-  // Custom lightweight line-by-line YAML parser
-  const parseYaml = (yamlStr: string): any => {
-    const lines = yamlStr
-      .split("\n")
-      .map((line) => line.replace(/\r$/, ""))
-      .filter((line) => line.trim() !== "" && !line.trim().startsWith("#"));
+  const xmlToObj = (node: Node): any => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      return node.nodeValue?.trim() || null;
+    }
 
-    if (lines.length === 0) return {};
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return null;
+    }
 
-    const parseLines = (lineIdx: number, currentIndent: number): [any, number] => {
-      let isArray = false;
-      let result: any = null;
+    const element = node as Element;
+    const obj: any = {};
 
-      // Check if current block starts with a list item
-      const firstLineIndent = lines[lineIdx].search(/\S/);
-      if (lines[lineIdx].trim().startsWith("- ")) {
-        isArray = true;
-        result = [];
+    // Process attributes
+    if (element.attributes.length > 0) {
+      obj["@attributes"] = {};
+      for (let i = 0; i < element.attributes.length; i++) {
+        const attr = element.attributes[i];
+        obj["@attributes"][attr.name] = attr.value;
+      }
+    }
+
+    // Process children
+    const children = Array.from(element.childNodes);
+    const elementChildren = children.filter((c) => c.nodeType === Node.ELEMENT_NODE);
+    const textChildren = children.filter(
+      (c) => c.nodeType === Node.TEXT_NODE && c.nodeValue && c.nodeValue.trim().length > 0
+    );
+
+    if (elementChildren.length === 0) {
+      const textContent = textChildren.map((c) => c.nodeValue?.trim()).join("");
+      if (Object.keys(obj).length === 0) {
+        // Try auto-coercing numbers/booleans if simple text
+        if (textContent === "true") return true;
+        if (textContent === "false") return false;
+        if (!isNaN(Number(textContent)) && textContent !== "") return Number(textContent);
+        return textContent;
+      }
+      if (textContent) obj["#text"] = textContent;
+      return obj;
+    }
+
+    for (const child of elementChildren) {
+      const childName = (child as Element).tagName;
+      const childObj = xmlToObj(child);
+
+      if (obj[childName] === undefined) {
+        obj[childName] = childObj;
       } else {
-        result = {};
-      }
-
-      let idx = lineIdx;
-      while (idx < lines.length) {
-        const line = lines[idx];
-        const indentCount = line.search(/\S/);
-
-        if (indentCount < currentIndent) {
-          break; // Less indented -> return to parent caller
+        if (!Array.isArray(obj[childName])) {
+          obj[childName] = [obj[childName]];
         }
-
-        const trimmed = line.trim();
-
-        if (isArray) {
-          if (!trimmed.startsWith("- ")) {
-            break;
-          }
-          const content = trimmed.substring(2).trim();
-
-          if (content.includes(":") && !content.startsWith('"') && !content.startsWith("'")) {
-            // Object inside array
-            const [key, ...rest] = content.split(":");
-            const valStr = rest.join(":").trim();
-            const objItem: any = {};
-            if (valStr !== "") {
-              objItem[key.trim()] = parsePrimitive(valStr);
-              idx++;
-            } else {
-              const [childRes, nextIdx] = parseLines(idx + 1, indentCount + 2);
-              objItem[key.trim()] = childRes;
-              idx = nextIdx;
-            }
-            result.push(objItem);
-          } else {
-            result.push(parsePrimitive(content));
-            idx++;
-          }
-        } else {
-          // Object key-value
-          const colonIdx = trimmed.indexOf(":");
-          if (colonIdx === -1) {
-            idx++;
-            continue;
-          }
-          const key = trimmed.substring(0, colonIdx).trim();
-          const valStr = trimmed.substring(colonIdx + 1).trim();
-
-          if (valStr !== "") {
-            result[key] = parsePrimitive(valStr);
-            idx++;
-          } else {
-            // Next line might be nested object or array
-            if (idx + 1 < lines.length) {
-              const nextIndent = lines[idx + 1].search(/\S/);
-              if (nextIndent > indentCount) {
-                const [childRes, nextIdx] = parseLines(idx + 1, nextIndent);
-                result[key] = childRes;
-                idx = nextIdx;
-              } else {
-                result[key] = null;
-                idx++;
-              }
-            } else {
-              result[key] = null;
-              idx++;
-            }
-          }
-        }
+        obj[childName].push(childObj);
       }
+    }
 
-      return [result, idx];
-    };
-
-    const parsePrimitive = (str: string): any => {
-      if (str === "true" || str === "True") return true;
-      if (str === "false" || str === "False") return false;
-      if (str === "null" || str === "~") return null;
-      if (/^-?\d+$/.test(str)) return parseInt(str, 10);
-      if (/^-?\d+\.\d+$/.test(str)) return parseFloat(str);
-
-      // Quotes removal
-      if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
-        return str.substring(1, str.length - 1);
-      }
-      return str;
-    };
-
-    const [parsed] = parseLines(0, lines[0].search(/\S/));
-    return parsed;
+    return obj;
   };
 
-  const handleConvert = (inputVal: string = yamlInput) => {
+  const handleConvert = (inputVal: string = xmlInput) => {
     if (!inputVal.trim()) {
       setJsonOutput("");
       setError(null);
@@ -146,24 +92,35 @@ meta:
     }
 
     try {
-      const parsed = parseYaml(inputVal);
-      setJsonOutput(JSON.stringify(parsed, null, indent));
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(inputVal, "text/xml");
+
+      const parserError = xmlDoc.querySelector("parsererror");
+      if (parserError) {
+        throw new Error(parserError.textContent || "XML Syntax Error");
+      }
+
+      const root = xmlDoc.documentElement;
+      if (!root) throw new Error("No root element found in XML");
+
+      const result = { [root.tagName]: xmlToObj(root) };
+      setJsonOutput(JSON.stringify(result, null, indent));
       setError(null);
     } catch (err: any) {
-      setError(err.message || "Failed to parse YAML input");
+      setError(err.message || "Failed to parse XML input");
       setJsonOutput("");
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
-    setYamlInput(val);
+    setXmlInput(val);
     handleConvert(val);
   };
 
   const handleLoadSample = () => {
-    setYamlInput(sampleYaml);
-    handleConvert(sampleYaml);
+    setXmlInput(sampleXml);
+    handleConvert(sampleXml);
   };
 
   const handleCopy = async () => {
@@ -190,12 +147,12 @@ meta:
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl">
-              <FileText className="w-6 h-6" />
+            <div className="p-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl">
+              <Code className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">YAML to JSON Converter</h1>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">Convert YAML configuration into formatted JSON object</p>
+              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">XML to JSON Converter</h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Parse XML documents and output formatted JSON structure</p>
             </div>
           </div>
 
@@ -209,7 +166,7 @@ meta:
             </button>
             <button
               onClick={() => {
-                setYamlInput("");
+                setXmlInput("");
                 setJsonOutput("");
                 setError(null);
               }}
@@ -230,11 +187,11 @@ meta:
               onChange={(e) => {
                 const val = Number(e.target.value);
                 setIndent(val);
-                if (yamlInput) {
-                  setTimeout(() => handleConvert(yamlInput), 50);
+                if (xmlInput) {
+                  setTimeout(() => handleConvert(xmlInput), 50);
                 }
               }}
-              className="px-3 py-1 text-sm bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="px-3 py-1 text-sm bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value={2}>2 Spaces</option>
               <option value={4}>4 Spaces</option>
@@ -254,12 +211,12 @@ meta:
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Input */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">YAML Input</label>
+          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">XML Input</label>
           <textarea
-            value={yamlInput}
+            value={xmlInput}
             onChange={handleInputChange}
-            placeholder="Paste YAML markup here..."
-            className="w-full h-96 p-4 font-mono text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-zinc-900 dark:text-zinc-100 resize-none shadow-sm"
+            placeholder="Paste XML string here..."
+            className="w-full h-96 p-4 font-mono text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-zinc-900 dark:text-zinc-100 resize-none shadow-sm"
           />
         </div>
 

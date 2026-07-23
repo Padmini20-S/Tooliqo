@@ -1,15 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Users, Upload, ShieldCheck, Search, CheckCircle, Edit } from "lucide-react";
+import { Users, Upload, ShieldCheck, Search, CheckCircle, Edit, KeyRound, Mail, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AdminPanel() {
+  const [isAdminAuth, setIsAdminAuth] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginOtp, setLoginOtp] = useState("");
+  const [step, setStep] = useState<"email" | "otp">("email");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   const [users, setUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<any>(null);
   
-  // State for the edit modal form
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editPhoto, setEditPhoto] = useState<string | null>(null);
@@ -19,38 +24,111 @@ export default function AdminPanel() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://tooliqo.onrender.com";
 
+  useEffect(() => {
+    // Try to auto-login if they already have an admin token
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+      fetch(`${API_URL}/api/admin/users`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+      .then(async (res) => {
+        if (res.status === 403) {
+          // Token exists but not an admin -> Show admin login screen
+          setIsLoading(false);
+          return null;
+        }
+        if (!res.ok) throw new Error("Invalid");
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.users) {
+          setUsers(data.users);
+          setIsAdminAuth(true);
+        }
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
+    }
+  }, [API_URL]);
+
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginEmail) return;
+    setIsLoggingIn(true);
+    
+    try {
+      const res = await fetch(`${API_URL}/api/auth/admin/send-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginEmail })
+      });
+      const data = await res.json();
+      
+      if (res.status === 403) {
+        toast.error("User not allowed");
+      } else if (res.ok) {
+        toast.success("OTP sent to your email");
+        setStep("otp");
+      } else {
+        toast.error(data.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      toast.error("Network Error");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginOtp) return;
+    setIsLoggingIn(true);
+    
+    try {
+      const res = await fetch(`${API_URL}/api/auth/admin/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginEmail, otp: loginOtp })
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.token) {
+        localStorage.setItem("auth_token", data.token); // Overwrite with admin token
+        toast.success("Admin authenticated!");
+        setIsAdminAuth(true);
+        
+        // Fetch users
+        const usersRes = await fetch(`${API_URL}/api/admin/users`, {
+          headers: { "Authorization": `Bearer ${data.token}` }
+        });
+        const usersData = await usersRes.json();
+        if (usersData.users) setUsers(usersData.users);
+        
+      } else {
+        toast.error(data.message || "Invalid OTP");
+      }
+    } catch (err) {
+      toast.error("Network Error");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
   const fetchUsers = () => {
     const token = localStorage.getItem("auth_token");
-    if (!token) {
-      window.location.href = "/login";
-      return;
-    }
-    
     fetch(`${API_URL}/api/admin/users`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
-    .then(async (res) => {
-      if (res.status === 403) {
-        toast.error("Access Denied: You are not an Admin");
-        window.location.href = "/";
-        return null;
-      }
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
       if (data && data.users) {
         setUsers(data.users);
       }
     })
-    .catch(console.error)
-    .finally(() => {
-      setIsLoading(false);
-    });
+    .catch(console.error);
   };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const openEditModal = (user: any) => {
     setSelectedUser(user);
@@ -62,12 +140,10 @@ export default function AdminPanel() {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     if (file.size > 2 * 1024 * 1024) { 
       toast.error("Image too large. Please use an image under 2MB.");
       return;
     }
-
     const reader = new FileReader();
     reader.onload = (event) => {
       setEditPhoto(event.target?.result as string);
@@ -86,19 +162,14 @@ export default function AdminPanel() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          name: editName,
-          email: editEmail,
-          photo: editPhoto
-        })
+        body: JSON.stringify({ name: editName, email: editEmail, photo: editPhoto })
       });
 
       const data = await res.json();
-      
       if (res.ok) {
         toast.success("User updated successfully in Database!");
         setSelectedUser(null);
-        fetchUsers(); // Refresh the list
+        fetchUsers();
       } else {
         toast.error(data.message || "Failed to update user");
       }
@@ -118,6 +189,79 @@ export default function AdminPanel() {
     return (
       <div className="flex-1 flex items-center justify-center bg-slate-50 min-h-screen">
         <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Admin Login Screen
+  if (!isAdminAuth) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-h-screen bg-slate-50 py-10 px-4">
+        <div className="bg-white max-w-md w-full rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+          <div className="p-8 text-center bg-blue-600">
+            <ShieldCheck className="w-12 h-12 text-white mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-white">Admin Secure Login</h1>
+            <p className="text-blue-100 mt-1 text-sm">Authorized personnel only</p>
+          </div>
+          
+          <div className="p-8">
+            {step === "email" ? (
+              <form onSubmit={handleSendOtp} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Admin Email Address</label>
+                  <div className="relative">
+                    <Mail className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input 
+                      type="email" 
+                      required
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      placeholder="Enter admin email..."
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+                    />
+                  </div>
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={isLoggingIn}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors disabled:opacity-70"
+                >
+                  {isLoggingIn ? "Sending OTP..." : "Get OTP Access"}
+                  {!isLoggingIn && <ArrowRight className="w-4 h-4" />}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div className="text-center mb-6">
+                  <p className="text-sm text-slate-500">OTP sent to <strong>{loginEmail}</strong></p>
+                  <button type="button" onClick={() => setStep("email")} className="text-xs text-blue-600 font-semibold mt-1">Wrong email? Change</button>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Enter OTP</label>
+                  <div className="relative">
+                    <KeyRound className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input 
+                      type="text" 
+                      required
+                      maxLength={6}
+                      value={loginOtp}
+                      onChange={(e) => setLoginOtp(e.target.value)}
+                      placeholder="123456"
+                      className="w-full pl-10 pr-4 py-3 text-center tracking-widest text-lg font-bold rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+                    />
+                  </div>
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={isLoggingIn}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors disabled:opacity-70"
+                >
+                  {isLoggingIn ? "Verifying..." : "Verify & Login"}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
