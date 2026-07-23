@@ -54,8 +54,8 @@ export async function POST(req: Request) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error);
-    return NextResponse.json({ message: "Network Error" }, { status: 500 });
+    return NextResponse.json({ message: error?.message || "Network Error" }, { status: 500 });
   }
 }

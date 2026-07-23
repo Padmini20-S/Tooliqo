@@ -49,8 +49,8 @@ export async function POST(req: Request) {
     await sendVerificationEmail(email, name, otp);
 
     return NextResponse.json({ message: "OTP sent successfully" }, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Signup error:", error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ message: error?.message || "Internal server error" }, { status: 500 });
   }
 }
