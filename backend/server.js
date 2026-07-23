@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  photo: { type: String }, // Optional profile photo (base64 or URL)
   isVerified: { type: Boolean, default: false },
   otp: String,
   otpExpiry: Date,
@@ -206,6 +207,40 @@ app.get("/api/admin/users", async (req, res) => {
     res.status(200).json({ users });
   } catch (error) {
     res.status(500).json({ message: "Network Error" });
+  }
+});
+
+app.put("/api/admin/users/:id", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.JWT_SECRET || "fallback");
+    
+    const { id } = req.params;
+    const { name, email, photo } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Ensure we don't create duplicate emails if email is changed
+    if (email !== user.email) {
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+      user.email = email;
+    }
+
+    if (name) user.name = name;
+    if (photo !== undefined) user.photo = photo;
+
+    await user.save();
+
+    res.status(200).json({ message: "User updated successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update user", error: error.message });
   }
 });
 

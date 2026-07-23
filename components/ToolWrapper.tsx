@@ -69,6 +69,100 @@ const InternetSpeedTest = dynamic(() => import("@/components/tools/InternetSpeed
   ssr: false,
 });
 
+// Milestone 1 (Network & SEO Tools)
+const DnsLookup = dynamic(() => import("@/components/tools/DnsLookup"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading DNS Lookup...</div>,
+  ssr: false,
+});
+const WhoisLookup = dynamic(() => import("@/components/tools/WhoisLookup"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading WHOIS Lookup...</div>,
+  ssr: false,
+});
+const SslCertificateChecker = dynamic(() => import("@/components/tools/SslCertificateChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading SSL Certificate Checker...</div>,
+  ssr: false,
+});
+const IpLookup = dynamic(() => import("@/components/tools/IpLookup"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading IP Lookup...</div>,
+  ssr: false,
+});
+const HttpHeaderChecker = dynamic(() => import("@/components/tools/HttpHeaderChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading HTTP Header Checker...</div>,
+  ssr: false,
+});
+const UserAgentParser = dynamic(() => import("@/components/tools/UserAgentParser"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading User-Agent Parser...</div>,
+  ssr: false,
+});
+const RobotsTxtGenerator = dynamic(() => import("@/components/tools/RobotsTxtGenerator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Robots.txt Generator...</div>,
+  ssr: false,
+});
+const SitemapGenerator = dynamic(() => import("@/components/tools/SitemapGenerator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Sitemap Generator...</div>,
+  ssr: false,
+});
+const OpenGraphGenerator = dynamic(() => import("@/components/tools/OpenGraphGenerator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Open Graph Generator...</div>,
+  ssr: false,
+});
+const RedirectChecker = dynamic(() => import("@/components/tools/RedirectChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Redirect Checker...</div>,
+  ssr: false,
+});
+const PingTool = dynamic(() => import("@/components/tools/PingTool"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Ping Tool...</div>,
+  ssr: false,
+});
+const PortScanner = dynamic(() => import("@/components/tools/PortScanner"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Port Scanner...</div>,
+  ssr: false,
+});
+const DomainAgeChecker = dynamic(() => import("@/components/tools/DomainAgeChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Domain Age Checker...</div>,
+  ssr: false,
+});
+const KeywordDensityChecker = dynamic(() => import("@/components/tools/KeywordDensityChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Keyword Density Checker...</div>,
+  ssr: false,
+});
+const MetaTagAnalyzer = dynamic(() => import("@/components/tools/MetaTagAnalyzer"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Meta Tag Analyzer...</div>,
+  ssr: false,
+});
+const GoogleSerpSimulator = dynamic(() => import("@/components/tools/GoogleSerpSimulator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Google SERP Simulator...</div>,
+  ssr: false,
+});
+const CanonicalUrlChecker = dynamic(() => import("@/components/tools/CanonicalUrlChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Canonical URL Checker...</div>,
+  ssr: false,
+});
+const FaviconFetcher = dynamic(() => import("@/components/tools/FaviconFetcher"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Favicon Fetcher...</div>,
+  ssr: false,
+});
+const BrokenLinkChecker = dynamic(() => import("@/components/tools/BrokenLinkChecker"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Broken Link Checker...</div>,
+  ssr: false,
+});
+const SchemaMarkupGenerator = dynamic(() => import("@/components/tools/SchemaMarkupGenerator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Schema Markup Generator...</div>,
+  ssr: false,
+});
+const PageSpeedInsightsMock = dynamic(() => import("@/components/tools/PageSpeedInsightsMock"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading PageSpeed Insights...</div>,
+  ssr: false,
+});
+const SocialSharePreview = dynamic(() => import("@/components/tools/SocialSharePreview"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Social Share Preview...</div>,
+  ssr: false,
+});
+const SlugGenerator = dynamic(() => import("@/components/tools/SlugGenerator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Slug Generator...</div>,
+  ssr: false,
+});
+
 interface ToolWrapperProps {
   slug: string;
 }
@@ -107,6 +201,58 @@ export default function ToolWrapper({ slug }: ToolWrapperProps) {
       return <MetaTagGenerator />;
     case "internet-speed-test":
       return <InternetSpeedTest />;
+
+    // Milestone 1 (Network & SEO Tools)
+    case "dns-lookup":
+      return <DnsLookup />;
+    case "whois-lookup":
+      return <WhoisLookup />;
+    case "ssl-certificate-checker":
+      return <SslCertificateChecker />;
+    case "ip-lookup":
+      return <IpLookup />;
+    case "http-header-checker":
+      return <HttpHeaderChecker />;
+    case "user-agent-parser":
+      return <UserAgentParser />;
+    case "robots-txt-generator":
+    case "robots-txt":
+      return <RobotsTxtGenerator />;
+    case "sitemap-generator":
+      return <SitemapGenerator />;
+    case "open-graph-generator":
+    case "open-graph":
+      return <OpenGraphGenerator />;
+    case "redirect-checker":
+      return <RedirectChecker />;
+    case "ping-tool":
+      return <PingTool />;
+    case "port-scanner":
+      return <PortScanner />;
+    case "domain-age-checker":
+      return <DomainAgeChecker />;
+    case "keyword-density-checker":
+      return <KeywordDensityChecker />;
+    case "meta-tag-analyzer":
+      return <MetaTagAnalyzer />;
+    case "google-serp-simulator":
+      return <GoogleSerpSimulator />;
+    case "canonical-url-checker":
+      return <CanonicalUrlChecker />;
+    case "favicon-fetcher":
+      return <FaviconFetcher />;
+    case "broken-link-checker":
+      return <BrokenLinkChecker />;
+    case "schema-markup-generator":
+      return <SchemaMarkupGenerator />;
+    case "page-speed-insights-mock":
+    case "page-speed-insights":
+      return <PageSpeedInsightsMock />;
+    case "social-share-preview":
+      return <SocialSharePreview />;
+    case "slug-generator":
+      return <SlugGenerator />;
+
     default:
       return <PremiumFileUploader toolName={slug} />;
   }
