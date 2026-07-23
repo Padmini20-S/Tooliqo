@@ -83,9 +83,9 @@ export default function ForgotPasswordPage() {
     <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-50">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-soft">
-            T
-          </div>
+          <Link href="/">
+            <img src="/icon.png" alt="Tooliqo Logo" className="w-14 h-14 rounded-2xl object-contain drop-shadow-sm hover:scale-105 transition-transform" />
+          </Link>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">
           Reset Password

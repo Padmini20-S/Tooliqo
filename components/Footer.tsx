@@ -10,9 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
-                T
-              </div>
+              <img src="/icon.png" alt="Tooliqo Logo" className="w-8 h-8 rounded-lg object-contain drop-shadow-sm" />
               <span className="font-bold text-xl tracking-tight text-slate-900">Tooliqo</span>
             </Link>
             <p className="text-slate-500 text-sm mb-6 max-w-sm leading-relaxed">
