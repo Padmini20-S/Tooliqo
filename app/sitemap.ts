@@ -1,22 +1,31 @@
-import { MetadataRoute } from "next";
-import { tools } from "@/lib/tools";
+import { MetadataRoute } from 'next'
+import { tools } from '@/lib/tools'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://tooliqo.com";
+  const baseUrl = 'https://tooliqo.com'
 
-  const toolUrls = tools.map((tool) => ({
+  // Base routes
+  const routes = [
+    '',
+    '/about',
+    '/contact',
+    '/privacy-policy',
+    '/terms-conditions',
+    '/disclaimer',
+  ].map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: route === '' ? 1.0 : 0.8,
+  }))
+
+  // Dynamic tool routes
+  const toolRoutes = tools.map((tool) => ({
     url: `${baseUrl}/tool/${tool.slug}`,
     lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }))
 
-  const staticUrls = ["", "/about", "/contact", "/privacy-policy", "/terms-conditions", "/disclaimer"].map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: path === "" ? 1.0 : 0.5,
-  }));
-
-  return [...staticUrls, ...toolUrls];
+  return [...routes, ...toolRoutes]
 }

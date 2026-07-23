@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Search, Wrench, FileText, Code, Palette, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -37,9 +38,13 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-indigo-500/25">
-                <Wrench className="w-5 h-5 text-white" />
-              </span>
+              <Image 
+                src="/logo.png" 
+                alt="Tooliqo Logo" 
+                width={36} 
+                height={36} 
+                className="rounded-xl shadow-lg"
+              />
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-pink-600 dark:from-indigo-400 dark:to-pink-400 font-sans tracking-tight">
                 Tooliqo
               </span>
