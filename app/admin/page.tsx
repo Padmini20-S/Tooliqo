@@ -4,16 +4,9 @@ import React, { useState, useEffect } from "react";
 import { Users, Upload, ShieldCheck, Search, Image as ImageIcon, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
-// Mock database for users since we don't have real backend DB access
-const MOCK_USERS = [
-  { id: 1, name: "Admin User", email: "admin@tooliqo.com", role: "admin", joined: "2024-01-15" },
-  { id: 2, name: "Rahul Singh", email: "rahul@example.com", role: "user", joined: "2024-02-20" },
-  { id: 3, name: "Priya Sharma", email: "priya@example.com", role: "user", joined: "2024-03-10" },
-  { id: 4, name: "Amit Kumar", email: "amit@example.com", role: "user", joined: "2024-03-25" },
-];
-
+// Remove MOCK_USERS since we will fetch from DB now.
 export default function AdminPanel() {
-  const [users, setUsers] = useState(MOCK_USERS);
+  const [users, setUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [customPhotos, setCustomPhotos] = useState<Record<string, string>>({});
@@ -36,27 +29,22 @@ export default function AdminPanel() {
     }
     setCustomPhotos(savedPhotos);
     
-    // Add current user to list from /api/auth/me if not already in list
+    // Fetch users from our new DB endpoint
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://tooliqo.onrender.com";
-    fetch(`${API_URL}/api/auth/me`, {
+    fetch(`${API_URL}/api/admin/users`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
     .then(res => res.json())
     .then(data => {
-      if (data && data.user) {
-        const exists = MOCK_USERS.find(u => u.email === data.user.email);
-        if (!exists) {
-          setUsers([
-            {
-              id: Date.now(),
-              name: data.user.name,
-              email: data.user.email,
-              role: data.user.role || "user",
-              joined: new Date(data.user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-            },
-            ...MOCK_USERS
-          ]);
-        }
+      if (data && data.users) {
+        const formattedUsers = data.users.map((u: any) => ({
+          id: u._id,
+          name: u.name,
+          email: u.email,
+          role: u.role || "user",
+          joined: new Date(u.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+        }));
+        setUsers(formattedUsers);
       }
     })
     .catch(console.error)
@@ -133,7 +121,7 @@ export default function AdminPanel() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Total Registered Users</p>
-              <h2 className="text-2xl font-bold text-slate-900">{users.length + 152}</h2>
+              <h2 className="text-2xl font-bold text-slate-900">{users.length}</h2>
             </div>
           </div>
         </div>

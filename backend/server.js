@@ -192,5 +192,22 @@ app.post("/api/auth/reset-password", async (req, res) => {
   }
 });
 
+app.get("/api/admin/users", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.JWT_SECRET || "fallback");
+    
+    const users = await User.find().select("-password -otp -otpExpiry").sort({ createdAt: -1 });
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).json({ message: "Network Error" });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
