@@ -37,10 +37,11 @@ export default function ProfilePage() {
         return res.json();
       })
       .then(data => {
+        const customPhoto = localStorage.getItem(`custom_photo_${data.user.email}`);
         setUser({
           ...data.user,
           memberSince: new Date(data.user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-          photoUrl: `https://api.dicebear.com/9.x/notionists/svg?seed=${data.user.name}`
+          photoUrl: customPhoto || `https://api.dicebear.com/9.x/notionists/svg?seed=${data.user.name}`
         });
         setIsLoading(false);
       })
