@@ -52,6 +52,22 @@ const RegexTester = dynamic(() => import("@/components/tools/RegexTester"), {
   loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Regex Tester...</div>,
   ssr: false,
 });
+const BrowserInformation = dynamic(() => import("@/components/tools/BrowserInformation"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Browser Information...</div>,
+  ssr: false,
+});
+const WebcamTest = dynamic(() => import("@/components/tools/WebcamTest"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Webcam Test...</div>,
+  ssr: false,
+});
+const MetaTagGenerator = dynamic(() => import("@/components/tools/MetaTagGenerator"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Meta Tag Generator...</div>,
+  ssr: false,
+});
+const InternetSpeedTest = dynamic(() => import("@/components/tools/InternetSpeedTest"), {
+  loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Internet Speed Test...</div>,
+  ssr: false,
+});
 
 interface ToolWrapperProps {
   slug: string;
@@ -83,6 +99,14 @@ export default function ToolWrapper({ slug }: ToolWrapperProps) {
       return <CssGradient />;
     case "regex-tester":
       return <RegexTester />;
+    case "browser-information":
+      return <BrowserInformation />;
+    case "webcam-test":
+      return <WebcamTest />;
+    case "meta-tag-generator":
+      return <MetaTagGenerator />;
+    case "internet-speed-test":
+      return <InternetSpeedTest />;
     default:
       return <PremiumFileUploader toolName={slug} />;
   }
