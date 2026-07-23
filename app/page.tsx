@@ -11,6 +11,8 @@ import ToolCard from "@/components/ToolCard";
 import { tools, Tool } from "@/lib/tools";
 import { motion } from "framer-motion";
 
+import FloatingBackgroundIcons from "@/components/FloatingBackgroundIcons";
+
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -66,6 +68,10 @@ export default function Home() {
     <div className="flex flex-col w-full">
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 md:pt-40 md:pb-32 px-4 sm:px-6 lg:px-8 w-full text-center overflow-hidden">
+        
+        {/* Animated Flying Icons in Background */}
+        <FloatingBackgroundIcons />
+        
         {/* Premium Background Glow Effect */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] sm:w-[1000px] sm:h-[500px] opacity-[0.15] pointer-events-none z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 blur-[120px] rounded-full"></div>
