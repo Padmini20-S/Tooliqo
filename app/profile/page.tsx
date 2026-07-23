@@ -16,6 +16,8 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [favoriteTools, setFavoriteTools] = useState<any[]>([]);
+  const [historyTools, setHistoryTools] = useState<any[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -46,6 +48,15 @@ export default function ProfilePage() {
         localStorage.removeItem("auth_token");
         router.push("/login");
       });
+
+    // Load local storage data
+    const savedFavs = JSON.parse(localStorage.getItem("tooliqo_favorites") || "[]");
+    setFavoriteTools(tools.filter(t => savedFavs.includes(t.slug)));
+
+    const savedHistory = JSON.parse(localStorage.getItem("tooliqo_history") || "[]");
+    // Preserve order of history
+    const hTools = savedHistory.map((slug: string) => tools.find(t => t.slug === slug)).filter(Boolean);
+    setHistoryTools(hTools);
   }, [router]);
 
   const handleLogout = async () => {
@@ -62,8 +73,7 @@ export default function ProfilePage() {
     );
   }
 
-  const favoriteTools = tools.slice(0, 3);
-  const recentTools = tools.slice(3, 6);
+  // Removed hardcoded tools
 
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -115,11 +125,60 @@ export default function ProfilePage() {
           {activeTab === "overview" && (
             <div className="space-y-8">
               <h2 className="text-2xl font-bold text-slate-900">Dashboard Overview</h2>
-              {/* Similar dashboard content rendering recent Tools and favorites */}
               <div className="bg-white p-8 rounded-2xl border border-slate-200">
                 <h3 className="text-lg font-semibold text-slate-900 mb-4">Welcome to your dashboard</h3>
-                <p className="text-slate-600">Your profile is active and verified. Features like live history and favorite saving are ready to be used!</p>
+                <p className="text-slate-600 mb-6">Your profile is active and verified. Features like live history and favorite saving are ready to be used!</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                    <h4 className="font-bold text-slate-900 text-2xl">{favoriteTools.length}</h4>
+                    <p className="text-slate-500 text-sm font-medium">Favorite Tools</p>
+                  </div>
+                  <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                    <h4 className="font-bold text-slate-900 text-2xl">{historyTools.length}</h4>
+                    <p className="text-slate-500 text-sm font-medium">Tools Used Recently</p>
+                  </div>
+                </div>
               </div>
+            </div>
+          )}
+
+          {activeTab === "favorites" && (
+            <div className="space-y-8">
+              <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                <Heart className="w-6 h-6 text-red-500" />
+                Your Favorites
+              </h2>
+              {favoriteTools.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {favoriteTools.map((tool, idx) => (
+                    <ToolCard key={tool.slug} tool={tool} index={idx} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
+                  <p className="text-slate-500">You haven't saved any favorite tools yet.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "history" && (
+            <div className="space-y-8">
+              <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                <History className="w-6 h-6 text-blue-500" />
+                Recent History
+              </h2>
+              {historyTools.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {historyTools.map((tool, idx) => (
+                    <ToolCard key={tool.slug} tool={tool} index={idx} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
+                  <p className="text-slate-500">You haven't used any tools recently.</p>
+                </div>
+              )}
             </div>
           )}
 

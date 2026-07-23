@@ -16,8 +16,14 @@ export default function ToolPageClient({ tool, children }: ToolPageClientProps) 
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   useEffect(() => {
+    // Check favorites
     const favorites = JSON.parse(localStorage.getItem("tooliqo_favorites") || "[]");
     setIsFavorite(favorites.includes(tool.slug));
+    
+    // Add to history
+    const history = JSON.parse(localStorage.getItem("tooliqo_history") || "[]");
+    const newHistory = [tool.slug, ...history.filter((s: string) => s !== tool.slug)].slice(0, 20);
+    localStorage.setItem("tooliqo_history", JSON.stringify(newHistory));
   }, [tool.slug]);
 
   const toggleFavorite = () => {
