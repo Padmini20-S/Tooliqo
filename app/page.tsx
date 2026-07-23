@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   Search, ArrowRight, Zap, Shield, Heart, HelpCircle, ChevronDown, CheckCircle, 
-  Image as ImageIcon, FileText, Video, Music, Bot, Code, Calculator, ArrowLeftRight, QrCode, Palette, SearchCheck, Type 
+  Terminal, Code, SearchCheck, Palette, FileText, MessageCircle, Briefcase, BookOpen, Wrench
 } from "lucide-react";
 import SearchBar from "@/components/SearchBar";
 import ToolCard from "@/components/ToolCard";
-import { tools, Tool } from "@/lib/tools";
+import { tools } from "@/lib/tools";
 import { motion } from "framer-motion";
 
 import FloatingBackgroundIcons from "@/components/FloatingBackgroundIcons";
@@ -30,19 +30,14 @@ export default function Home() {
   }, []);
 
   const categories = [
-    { id: "image", name: "Image", icon: ImageIcon, color: "text-blue-500", bg: "bg-blue-50" },
-    { id: "pdf", name: "PDF", icon: FileText, color: "text-red-500", bg: "bg-red-50" },
-    { id: "video", name: "Video", icon: Video, color: "text-purple-500", bg: "bg-purple-50" },
-    { id: "audio", name: "Audio", icon: Music, color: "text-orange-500", bg: "bg-orange-50" },
-    { id: "ai", name: "AI", icon: Bot, color: "text-emerald-500", bg: "bg-emerald-50" },
-    { id: "document", name: "Document", icon: FileText, color: "text-sky-500", bg: "bg-sky-50" },
-    { id: "developer", name: "Developer", icon: Code, color: "text-indigo-500", bg: "bg-indigo-50" },
-    { id: "calculator", name: "Calculator", icon: Calculator, color: "text-teal-500", bg: "bg-teal-50" },
-    { id: "converter", name: "Converter", icon: ArrowLeftRight, color: "text-amber-500", bg: "bg-amber-50" },
-    { id: "qr", name: "QR", icon: QrCode, color: "text-zinc-600", bg: "bg-zinc-100" },
-    { id: "color", name: "Color", icon: Palette, color: "text-pink-500", bg: "bg-pink-50" },
-    { id: "seo", name: "SEO", icon: SearchCheck, color: "text-cyan-500", bg: "bg-cyan-50" },
-    { id: "text", name: "Text", icon: Type, color: "text-violet-500", bg: "bg-violet-50" },
+    { id: "seo", name: "Website & SEO", icon: SearchCheck, color: "text-blue-500", bg: "bg-blue-50" },
+    { id: "dev", name: "Developer", icon: Terminal, color: "text-emerald-500", bg: "bg-emerald-50" },
+    { id: "design", name: "Design", icon: Palette, color: "text-purple-500", bg: "bg-purple-50" },
+    { id: "text", name: "Text", icon: FileText, color: "text-amber-500", bg: "bg-amber-50" },
+    { id: "social", name: "Social Media", icon: MessageCircle, color: "text-pink-500", bg: "bg-pink-50" },
+    { id: "business", name: "Business", icon: Briefcase, color: "text-indigo-500", bg: "bg-indigo-50" },
+    { id: "student", name: "Student", icon: BookOpen, color: "text-cyan-500", bg: "bg-cyan-50" },
+    { id: "utility", name: "Utility", icon: Wrench, color: "text-orange-500", bg: "bg-orange-50" },
   ];
 
   const faqs = [
@@ -175,9 +170,22 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tools.slice(0, 6).map((tool, index) => (
-              <ToolCard key={tool.slug} tool={tool} index={index} />
-            ))}
+            {tools
+              .filter(tool => [
+                "internet-speed-test",
+                "whois-lookup",
+                "dns-lookup",
+                "ssl-certificate-checker",
+                "meta-tag-generator",
+                "schema-markup-generator",
+                "browser-information",
+                "webcam-test",
+                "linkedin-headline-generator",
+                "study-planner"
+              ].includes(tool.slug))
+              .map((tool, index) => (
+                <ToolCard key={tool.slug} tool={tool} index={index} />
+              ))}
           </div>
           
           <div className="mt-8 text-center sm:hidden">

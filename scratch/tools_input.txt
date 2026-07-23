@@ -1,0 +1,163 @@
+Website & SEO (25)
+Meta Tag Generator
+Schema Markup Generator
+Robots.txt Generator
+Sitemap Validator
+Open Graph Generator
+Twitter Card Generator
+Canonical URL Checker
+Hreflang Generator
+Redirect Checker
+Keyword Density Checker
+Keyword Difficulty Checker
+SERP Preview Tool
+Meta Description Generator
+Slug Generator
+HTML Sitemap Generator
+Favicon Checker
+Broken Link Checker
+UTM Builder
+URL Shortener
+Redirect Generator
+Page Speed Analyzer
+Mobile Friendly Checker
+Domain Age Checker
+WHOIS Lookup
+DNS Lookup
+
+Developer (25)
+JWT Decoder
+JWT Encoder
+UUID Generator
+UUID Validator
+Curl Generator
+API Request Tester
+GraphQL Formatter
+XML Validator
+YAML Validator
+TOML Formatter
+CSV Viewer
+CSV to JSON
+JSON to CSV
+XML to JSON
+JSON Diff Checker
+Unix Timestamp Converter
+Regex Generator
+Cron Generator
+HTTP Header Checker
+MIME Type Finder
+SSL Certificate Checker
+Port Checker
+Base32 Encoder
+Hex Converter
+Binary Converter
+
+Design (20)
+SVG Wave Generator
+SVG Blob Generator
+CSS Animation Generator
+CSS Grid Generator
+Flexbox Generator
+Glassmorphism Generator
+Neumorphism Generator
+CSS Button Generator
+CSS Shadow Generator
+Gradient Mesh Generator
+Color Blindness Simulator
+Palette Extractor
+Font Pair Generator
+SVG Optimizer
+QR Sticker Generator
+Mockup Generator
+Browser Frame Generator
+Icon Converter
+CSS Loader Generator
+Favicon Pack Generator
+
+Social Media (20)
+LinkedIn Headline Generator
+LinkedIn Summary Generator
+YouTube Chapter Generator
+YouTube Timestamp Generator
+Reel Hook Generator
+Viral Caption Generator
+Hashtag Analyzer
+Bio Link Generator
+Emoji Combiner
+Thumbnail Title Analyzer
+Username Availability Checker
+Social Post Formatter
+CTA Generator
+Comment Generator
+Poll Generator
+Giveaway Picker
+YouTube Comment Picker
+Viral Hook Generator
+Engagement Calculator
+Trending Hashtag Finder
+
+Business (20)
+Invoice Number Generator
+GST HSN Finder
+Profit Margin Analyzer
+Break-even Calculator
+Sales Commission Calculator
+Startup Burn Rate Calculator
+ROI Calculator
+CAC Calculator
+LTV Calculator
+Salary Hike Calculator
+Freelance Rate Calculator
+Pricing Calculator
+Subscription Calculator
+Business Name Score Checker
+Invoice Due Date Calculator
+Quotation Builder
+Receipt Builder
+Tax Estimator
+Profit Split Calculator
+Expense Tracker
+
+Student (20)
+Study Planner
+Revision Planner
+Flashcard Generator
+Assignment Planner
+Citation Formatter
+APA Generator
+MLA Generator
+Research Outline Generator
+Quiz Generator
+Random Question Picker
+Study Timer
+Reading Time Calculator
+Exam Countdown
+GPA Planner
+Attendance Goal Calculator
+Notes Formatter
+Formula Sheet Generator
+Homework Tracker
+Subject Timetable Generator
+Essay Outline Generator
+
+Utility (20)
+Internet Speed Test
+Webcam Test
+Microphone Test
+Keyboard Tester
+Mouse Tester
+Screen Resolution Checker
+Browser Information
+Device Information
+Battery Status Checker
+IP Geolocation
+Time Zone Finder
+Network Ping Test
+Internet Latency Checker
+Clipboard Cleaner
+Random Picker
+Spin Wheel
+Coin Flip
+Dice Roller
+Password Audit
+Random Secret Generator

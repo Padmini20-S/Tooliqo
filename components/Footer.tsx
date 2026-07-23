@@ -21,10 +21,10 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-slate-900 mb-4">Tools</h3>
             <ul className="space-y-3">
-              <li><Link href="/category/image" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Image Tools</Link></li>
-              <li><Link href="/category/pdf" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">PDF Tools</Link></li>
-              <li><Link href="/category/ai" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">AI Tools</Link></li>
-              <li><Link href="/category/video" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Video Tools</Link></li>
+              <li><Link href="/categories/seo" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Website & SEO</Link></li>
+              <li><Link href="/categories/dev" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Developer Tools</Link></li>
+              <li><Link href="/categories/design" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Design & Graphics</Link></li>
+              <li><Link href="/categories/utility" className="text-sm text-slate-500 hover:text-blue-600 transition-colors">Utility Tools</Link></li>
             </ul>
           </div>
           
