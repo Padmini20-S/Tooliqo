@@ -8,7 +8,8 @@ const { Resend } = require("resend");
 require("dotenv").config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Allow CORS from any origin for ease of use (especially for frontend on Vercel)
 app.use(cors({ origin: "*" }));
 

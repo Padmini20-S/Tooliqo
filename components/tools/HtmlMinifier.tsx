@@ -1,20 +1,192 @@
 "use client";
 
-import React from "react";
-import { Hammer } from "lucide-react";
+import React, { useState } from "react";
+import { Copy, Trash2, Download, Check, Sparkles, Code2 } from "lucide-react";
 
-export default function HtmlMinifier() {{
+export default function HtmlMinifier() {
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+  const [removeComments, setRemoveComments] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const sampleHtml = `<!DOCTYPE html>
+<!-- Tooliqo Web Application -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Minifier Sample Page</title>
+  </head>
+  <body>
+    <!-- Main Content Area -->
+    <div className="container" id="app">
+      <h1>Welcome to Tooliqo</h1>
+      <p>Fast, client-side, developer utilities.</p>
+    </div>
+  </body>
+</html>`;
+
+  const minifyHtml = (htmlStr: string, stripComments: boolean = removeComments) => {
+    if (!htmlStr.trim()) {
+      setOutput("");
+      return;
+    }
+
+    let minified = htmlStr;
+
+    if (stripComments) {
+      minified = minified.replace(/<!--[\s\S]*?-->/g, "");
+    }
+
+    minified = minified
+      .replace(/\s+/g, " ")
+      .replace(/>\s+</g, "><")
+      .trim();
+
+    setOutput(minified);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setInput(val);
+    minifyHtml(val, removeComments);
+  };
+
+  const handleLoadSample = () => {
+    setInput(sampleHtml);
+    minifyHtml(sampleHtml, removeComments);
+  };
+
+  const handleCopy = async () => {
+    if (!output) return;
+    await navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownload = () => {
+    if (!output) return;
+    const blob = new Blob([output], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "index.min.html";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const origSize = new Blob([input]).size;
+  const minSize = new Blob([output]).size;
+  const savings = origSize > 0 ? Math.round(((origSize - minSize) / origSize) * 100) : 0;
+
   return (
-    <div className="w-full max-w-2xl mx-auto p-10 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/20 text-center space-y-4">
-      <div className="flex justify-center">
-        <span className="p-4 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
-          <Hammer className="w-8 h-8" />
-        </span>
+    <div className="w-full max-w-6xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-red-500/10 text-red-600 dark:text-red-400 rounded-xl">
+              <Code2 className="w-6 h-6" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">HTML Minifier</h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Minify HTML document markup by removing comments and collapsing redundant whitespace</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleLoadSample}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg transition"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Load Sample
+            </button>
+            <button
+              onClick={() => {
+                setInput("");
+                setOutput("");
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 hover:bg-red-500/10 hover:text-red-600 text-zinc-700 dark:text-zinc-300 rounded-lg transition"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Clear
+            </button>
+          </div>
+        </div>
+
+        {/* Options & Stats */}
+        <div className="mt-6 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-6">
+          <label className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={removeComments}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                setRemoveComments(checked);
+                minifyHtml(input, checked);
+              }}
+              className="rounded border-zinc-300 dark:border-zinc-700 text-red-600 focus:ring-red-500"
+            />
+            <span>Remove HTML Comments (&lt;!-- ... --&gt;)</span>
+          </label>
+
+          {output && (
+            <div className="flex items-center gap-4 text-xs">
+              <span className="text-zinc-500">Original: <strong className="text-zinc-900 dark:text-zinc-100 font-mono">{origSize} B</strong></span>
+              <span className="text-zinc-500">Minified: <strong className="text-zinc-900 dark:text-zinc-100 font-mono">{minSize} B</strong></span>
+              <span className="px-2.5 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 font-bold font-mono">
+                {savings}% Savings
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-      <h2 className="text-xl font-bold">Under Construction</h2>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-        This tool is currently being built and will be available in the next major update!
-      </p>
+
+      {/* Editor Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Input */}
+        <div className="flex flex-col space-y-2">
+          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Raw HTML Markup</label>
+          <textarea
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Paste HTML markup here..."
+            className="w-full h-96 p-4 font-mono text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-500 text-zinc-900 dark:text-zinc-100 resize-none shadow-sm"
+          />
+        </div>
+
+        {/* Output */}
+        <div className="flex flex-col space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Minified HTML Output</label>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCopy}
+                disabled={!output}
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-40 text-zinc-700 dark:text-zinc-300 rounded-lg transition"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied!" : "Copy"}
+              </button>
+              <button
+                onClick={handleDownload}
+                disabled={!output}
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-40 text-zinc-700 dark:text-zinc-300 rounded-lg transition"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Download
+              </button>
+            </div>
+          </div>
+          <textarea
+            readOnly
+            value={output}
+            placeholder="Minified HTML string will appear here..."
+            className="w-full h-96 p-4 font-mono text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-900 dark:text-zinc-100 resize-none shadow-sm"
+          />
+        </div>
+      </div>
     </div>
   );
-}}
+}
+

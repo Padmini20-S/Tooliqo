@@ -163,6 +163,33 @@ const SlugGenerator = dynamic(() => import("@/components/tools/SlugGenerator"), 
   ssr: false,
 });
 
+// Milestone 2 (Developer & Code Utilities)
+const JsonToXml = dynamic(() => import("@/components/tools/JsonToXml"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JSON to XML...</div>, ssr: false });
+const XmlToJson = dynamic(() => import("@/components/tools/XmlToJson"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading XML to JSON...</div>, ssr: false });
+const YamlToJson = dynamic(() => import("@/components/tools/YamlToJson"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading YAML to JSON...</div>, ssr: false });
+const JsonToYaml = dynamic(() => import("@/components/tools/JsonToYaml"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JSON to YAML...</div>, ssr: false });
+const CsvToJson = dynamic(() => import("@/components/tools/CsvToJson"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading CSV to JSON...</div>, ssr: false });
+const JsonToCsv = dynamic(() => import("@/components/tools/JsonToCsv"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JSON to CSV...</div>, ssr: false });
+const SqlFormatter = dynamic(() => import("@/components/tools/SqlFormatter"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading SQL Formatter...</div>, ssr: false });
+const HtmlFormatter = dynamic(() => import("@/components/tools/HtmlFormatter"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading HTML Formatter...</div>, ssr: false });
+const CssFormatter = dynamic(() => import("@/components/tools/CssFormatter"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading CSS Formatter...</div>, ssr: false });
+const JsFormatter = dynamic(() => import("@/components/tools/JsFormatter"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JS Formatter...</div>, ssr: false });
+const HtmlEntityEncoder = dynamic(() => import("@/components/tools/HtmlEntityEncoder"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading HTML Entity Encoder...</div>, ssr: false });
+const JwtDecoder = dynamic(() => import("@/components/tools/JwtDecoder"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JWT Decoder...</div>, ssr: false });
+const UuidGenerator = dynamic(() => import("@/components/tools/UuidGenerator"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading UUID Generator...</div>, ssr: false });
+const CronExpressionGenerator = dynamic(() => import("@/components/tools/CronExpressionGenerator"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Cron Expression Generator...</div>, ssr: false });
+const ChmodCalculator = dynamic(() => import("@/components/tools/ChmodCalculator"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Chmod Calculator...</div>, ssr: false });
+const CurlToFetch = dynamic(() => import("@/components/tools/CurlToFetch"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading cURL to fetch...</div>, ssr: false });
+const Base64ImageEncoder = dynamic(() => import("@/components/tools/Base64ImageEncoder"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Base64 Image Encoder...</div>, ssr: false });
+const HexToRgb = dynamic(() => import("@/components/tools/HexToRgb"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading HEX to RGB...</div>, ssr: false });
+const SvgToPngConverter = dynamic(() => import("@/components/tools/SvgToPngConverter"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading SVG to PNG...</div>, ssr: false });
+const JsMinifier = dynamic(() => import("@/components/tools/JsMinifier"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading JS Minifier...</div>, ssr: false });
+const CssMinifier = dynamic(() => import("@/components/tools/CssMinifier"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading CSS Minifier...</div>, ssr: false });
+const HtmlMinifier = dynamic(() => import("@/components/tools/HtmlMinifier"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading HTML Minifier...</div>, ssr: false });
+const LoremIpsumGenerator = dynamic(() => import("@/components/tools/LoremIpsumGenerator"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Lorem Ipsum Generator...</div>, ssr: false });
+const MarkdownToHtml = dynamic(() => import("@/components/tools/MarkdownToHtml"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading Markdown to HTML...</div>, ssr: false });
+const UrlParser = dynamic(() => import("@/components/tools/UrlParser"), { loading: () => <div className="h-80 flex items-center justify-center text-zinc-400">Loading URL Parser...</div>, ssr: false });
+
 interface ToolWrapperProps {
   slug: string;
 }
@@ -252,6 +279,61 @@ export default function ToolWrapper({ slug }: ToolWrapperProps) {
       return <SocialSharePreview />;
     case "slug-generator":
       return <SlugGenerator />;
+
+    // Milestone 2 (Developer & Code Utilities)
+    case "json-to-xml":
+      return <JsonToXml />;
+    case "xml-to-json":
+      return <XmlToJson />;
+    case "yaml-to-json":
+      return <YamlToJson />;
+    case "json-to-yaml":
+      return <JsonToYaml />;
+    case "csv-to-json":
+      return <CsvToJson />;
+    case "json-to-csv":
+      return <JsonToCsv />;
+    case "sql-formatter":
+      return <SqlFormatter />;
+    case "html-formatter":
+      return <HtmlFormatter />;
+    case "css-formatter":
+      return <CssFormatter />;
+    case "js-formatter":
+      return <JsFormatter />;
+    case "html-entity-encoder":
+      return <HtmlEntityEncoder />;
+    case "jwt-decoder":
+      return <JwtDecoder />;
+    case "uuid-generator":
+      return <UuidGenerator />;
+    case "cron-expression-generator":
+    case "crontab-generator":
+      return <CronExpressionGenerator />;
+    case "chmod-calculator":
+      return <ChmodCalculator />;
+    case "curl-to-fetch":
+      return <CurlToFetch />;
+    case "base64-image-encoder":
+      return <Base64ImageEncoder />;
+    case "hex-to-rgb":
+      return <HexToRgb />;
+    case "svg-to-png-converter":
+    case "svg-to-png":
+      return <SvgToPngConverter />;
+    case "js-minifier":
+      return <JsMinifier />;
+    case "css-minifier":
+      return <CssMinifier />;
+    case "html-minifier":
+      return <HtmlMinifier />;
+    case "lorem-ipsum-generator":
+    case "lorem-ipsum":
+      return <LoremIpsumGenerator />;
+    case "markdown-to-html":
+      return <MarkdownToHtml />;
+    case "url-parser":
+      return <UrlParser />;
 
     default:
       return <PremiumFileUploader toolName={slug} />;
