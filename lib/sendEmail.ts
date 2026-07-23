@@ -6,7 +6,8 @@ import {
   WelcomeEmail
 } from "./emails";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Use a fallback key for local build process where ENV might not be set
+const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_build");
 const FROM_EMAIL = "Tooliqo <support@tooliqo.in>";
 
 export async function sendVerificationEmail(email: string, name: string, otp: string) {
