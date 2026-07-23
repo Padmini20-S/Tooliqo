@@ -6,7 +6,6 @@ import {
   Search, ArrowRight, Zap, Shield, Heart, HelpCircle, ChevronDown, CheckCircle, 
   Terminal, Code, SearchCheck, Palette, FileText, MessageCircle, Briefcase, BookOpen, Wrench
 } from "lucide-react";
-import SearchBar from "@/components/SearchBar";
 import ToolCard from "@/components/ToolCard";
 import { tools } from "@/lib/tools";
 import { motion } from "framer-motion";
@@ -14,20 +13,7 @@ import { motion } from "framer-motion";
 import FloatingBackgroundIcons from "@/components/FloatingBackgroundIcons";
 
 export default function Home() {
-  const [searchOpen, setSearchOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  
-  // Setup keyboard shortcut for search
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   const categories = [
     { id: "seo", name: "Website & SEO", icon: SearchCheck, color: "text-blue-500", bg: "bg-blue-50" },
@@ -99,10 +85,9 @@ export default function Home() {
             100+ Free Online Tools for Images, PDF, AI, Video, Audio, Text and more. Enhance your productivity with a premium, lightning-fast platform.
           </p>
 
-          {/* Large Hero Search Bar */}
           <div className="max-w-3xl mx-auto mt-12 relative">
             <button 
-              onClick={() => setSearchOpen(true)}
+              onClick={() => document.dispatchEvent(new CustomEvent('openSearch'))}
               className="w-full flex items-center gap-4 bg-white/90 backdrop-blur-md border-2 border-slate-200/80 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 rounded-2xl px-6 py-5 sm:px-8 sm:py-6 shadow-sm transition-all duration-300 text-left group"
             >
               <Search className="w-7 h-7 text-slate-400 group-hover:text-blue-500 transition-colors" />
@@ -290,7 +275,6 @@ export default function Home() {
         </div>
       </section>
 
-      <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }

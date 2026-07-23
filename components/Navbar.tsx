@@ -2,14 +2,37 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, Menu, X, User } from "lucide-react";
+import { 
+  Search, Menu, X, User 
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+
+  // Setup keyboard shortcut and custom event for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    const handleCustomOpen = () => setSearchOpen(true);
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("openSearch", handleCustomOpen);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("openSearch", handleCustomOpen);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,7 +91,7 @@ export default function Navbar() {
               {/* Search Trigger */}
               <button 
                 className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg text-sm text-slate-500 transition-colors w-48 lg:w-64"
-                onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true }))}
+                onClick={() => setSearchOpen(true)}
               >
                 <Search className="w-4 h-4 text-slate-400" />
                 <span>Search tools...</span>
@@ -87,7 +110,10 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
             <div className="flex md:hidden items-center space-x-4">
-              <button className="text-slate-500 hover:text-slate-900 p-2">
+              <button 
+                onClick={() => setSearchOpen(true)}
+                className="text-slate-500 hover:text-slate-900 p-2"
+              >
                 <Search className="w-5 h-5" />
               </button>
               <button
@@ -134,6 +160,8 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
