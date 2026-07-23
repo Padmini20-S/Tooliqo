@@ -8,7 +8,6 @@ import { Sparkles, Shield, Cpu, Heart } from "lucide-react";
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 flex flex-col transition-colors duration-300">
-      <Navbar />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
         {/* Header */}
@@ -64,7 +63,6 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 export default function Error({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 flex flex-col transition-colors duration-300">
-      <Navbar />
       <main className="flex-1 flex flex-col items-center justify-center p-8 space-y-6 text-center">
         <h1 className="text-4xl font-extrabold text-red-505">Oops!</h1>
         <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">Something went wrong</h2>
@@ -23,7 +22,6 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
           </a>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
