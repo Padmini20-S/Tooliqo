@@ -42,9 +42,10 @@ export default function RootLayout({
         </main>
         <Footer />
         <MobileNav />
-        <Toaster position="bottom-right" richColors />
+        <Toaster position="top-right" duration={3000} richColors />
       </body>
     </html>
   );
 }
+
 
