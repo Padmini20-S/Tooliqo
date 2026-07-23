@@ -29,7 +29,14 @@ export default function AdminPanel() {
     fetch(`${API_URL}/api/admin/users`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
-    .then(res => res.json())
+    .then(async (res) => {
+      if (res.status === 403) {
+        toast.error("Access Denied: You are not an Admin");
+        window.location.href = "/";
+        return null;
+      }
+      return res.json();
+    })
     .then(data => {
       if (data && data.users) {
         setUsers(data.users);

@@ -201,7 +201,12 @@ app.get("/api/admin/users", async (req, res) => {
     }
 
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET || "fallback");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback");
+    
+    const allowedAdmins = ["singh13019@gmail.com", "diplomawithbtech@gmail.com"];
+    if (!allowedAdmins.includes(decoded.email)) {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
     
     const users = await User.find().select("-password -otp -otpExpiry").sort({ createdAt: -1 });
     res.status(200).json({ users });
@@ -218,7 +223,12 @@ app.put("/api/admin/users/:id", async (req, res) => {
     }
 
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET || "fallback");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback");
+    
+    const allowedAdmins = ["singh13019@gmail.com", "diplomawithbtech@gmail.com"];
+    if (!allowedAdmins.includes(decoded.email)) {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
     
     const { id } = req.params;
     const { name, email, photo } = req.body;
